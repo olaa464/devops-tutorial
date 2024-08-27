@@ -7,48 +7,46 @@ pipeline {
 
     stages {
 
-	stage('Check Docker') {
-    	    steps {
-       		 sh 'docker --version'
-   	    }
+        stage('Check Docker') {
+            steps {
+                sh 'docker --version'
+            }
         }
 
         stage('Clone repository') {
             steps {
-                /* Let's make sure we have the repository cloned to our workspace */
+                /* Clone the repository to the workspace */
                 checkout scm
             }
         }
 
         stage('Build image') {
             steps {
-                /* This builds the actual image; synonymous to
-                 * docker build on the command line */
+                /* Build the Docker image and tag it as 'latest' */
                 script {
-                    app = docker.build("joeybader/joeysapp")
+                    app = docker.build("joeybader/joeysapp:latest")
                 }
             }
         }
 
         stage('Test image') {
-    steps {
-        script {
-            echo 'tests passed'
-        }
-    }
-}
-
-
-        stage('Push image') {
-    steps {
-        script {
-            withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_HUB_USR', passwordVariable: 'DOCKER_HUB_PSW')]) {
-                sh "echo $DOCKER_HUB_PSW | docker login -u $DOCKER_HUB_USR --password-stdin"
-                sh "docker push joeybader/joeysapp:${env.BUILD_NUMBER}"
-			sh "docker push joeybader/joeysapp:latest"
+            steps {
+                /* Dummy test stage */
+                script {
+                    echo 'tests passed'
+                }
             }
         }
-    }
-}
+
+        stage('Push image') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_HUB_USR', passwordVariable: 'DOCKER_HUB_PSW')]) {
+                        sh "echo $DOCKER_HUB_PSW | docker login -u $DOCKER_HUB_USR --password-stdin"
+                        sh "docker push joeybader/joeysapp:latest"
+                    }
+                }
+            }
+        }
     }
 }
