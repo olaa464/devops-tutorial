@@ -6,6 +6,13 @@ pipeline {
     }
 
     stages {
+
+	stage('Check Docker') {
+    	    steps {
+       		 sh 'docker --version'
+   	    }
+        }
+
         stage('Clone repository') {
             steps {
                 /* Let's make sure we have the repository cloned to our workspace */
