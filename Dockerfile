@@ -1,5 +1,5 @@
 # use a node base image
-FROM --platform=linux/arm64 node:18-onbuild
+FROM node:19-bullseye
 
 # set maintainer
 LABEL maintainer="joeybader2003@outlook.com"
