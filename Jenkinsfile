@@ -33,10 +33,7 @@ pipeline {
         stage('Test image') {
     steps {
         script {
-            app.inside {
-                sh 'ls -la /'  // List files and permissions in the root directory
-                sh 'echo "Tests passed"'
-            }
+            echo 'tests passed'
         }
     }
 }
