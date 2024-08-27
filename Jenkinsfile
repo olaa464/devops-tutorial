@@ -25,7 +25,7 @@ pipeline {
                 /* This builds the actual image; synonymous to
                  * docker build on the command line */
                 script {
-                    app = docker.build("joeysapp")
+                    app = docker.build("joeybader/joeysapp")
                 }
             }
         }
@@ -44,8 +44,8 @@ pipeline {
         script {
             withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_HUB_USR', passwordVariable: 'DOCKER_HUB_PSW')]) {
                 sh "echo $DOCKER_HUB_PSW | docker login -u $DOCKER_HUB_USR --password-stdin"
-                sh "docker push joeysapp"
-                sh "docker push joeysapp:latest"
+                sh "docker push joeybader/joeysapp:${env.BUILD_NUMBER}"
+			sh "docker push joeybader/joeysapp:latest"
             }
         }
     }
