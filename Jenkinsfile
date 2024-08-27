@@ -18,22 +18,22 @@ pipeline {
                 /* This builds the actual image; synonymous to
                  * docker build on the command line */
                 script {
-                    app = docker.build("edureka1/edureka")
+                    app = docker.build("joeysapp")
                 }
             }
         }
 
         stage('Test image') {
-            steps {
-                /* Ideally, we would run a test framework against our image.
-                 * For this example, we're using a Volkswagen-type approach ;-) */
-                script {
-                    app.inside {
-                        sh 'echo "Tests passed"'
-                    }
-                }
+    steps {
+        script {
+            app.inside {
+                sh 'ls -la /'  // List files and permissions in the root directory
+                sh 'echo "Tests passed"'
             }
         }
+    }
+}
+
 
         stage('Push image') {
             steps {
