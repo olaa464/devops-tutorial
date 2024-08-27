@@ -1,6 +1,11 @@
 node {
     def app
 
+    agent any
+    environment {
+        PATH = "/usr/local/bin:/usr/bin:/bin:$PATH"
+    }
+
     stage('Clone repository') {
         /* Let's make sure we have the repository cloned to our workspace */
 
