@@ -1,36 +1,52 @@
-node {
-    def app
+pipeline {
+    agent any
 
-    stage('Clone repository') {
-        /* Let's make sure we have the repository cloned to our workspace */
-
-        checkout scm
+    environment {
+        PATH = "/usr/local/bin:/usr/bin:/bin:$PATH"
     }
 
-    stage('Build image') {
-        /* This builds the actual image; synonymous to
-         * docker build on the command line */
+    stages {
 
-        app = docker.build("edureka1/edureka")
-    }
-
-    stage('Test image') {
-        /* Ideally, we would run a test framework against our image.
-         * For this example, we're using a Volkswagen-type approach ;-) */
-
-        app.inside {
-            sh 'echo "Tests passed"'
+        stage('Check Docker') {
+            steps {
+                sh 'docker --version'
+            }
         }
-    }
 
-    stage('Push image') {
-        /* Finally, we'll push the image with two tags:
-         * First, the incremental build number from Jenkins
-         * Second, the 'latest' tag.
-         * Pushing multiple tags is cheap, as all the layers are reused. */
-        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-            app.push("${env.BUILD_NUMBER}")
-            app.push("latest")
+        stage('Clone repository') {
+            steps {
+                /* Clone the repository to the workspace */
+                checkout scm
+            }
+        }
+
+        stage('Build image') {
+            steps {
+                /* Build the Docker image and tag it as 'latest' */
+                script {
+                    app = docker.build("joeybader/joeysapp:latest")
+                }
+            }
+        }
+
+        stage('Test image') {
+            steps {
+                /* Dummy test stage */
+                script {
+                    echo 'tests passed'
+                }
+            }
+        }
+
+        stage('Push image') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_HUB_USR', passwordVariable: 'DOCKER_HUB_PSW')]) {
+                        sh "echo $DOCKER_HUB_PSW | docker login -u $DOCKER_HUB_USR --password-stdin"
+                        sh "docker push joeybader/joeysapp:latest"
+                    }
+                }
+            }
         }
     }
 }

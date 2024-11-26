@@ -1,8 +1,8 @@
 # use a node base image
-FROM node:7-onbuild
+FROM node:19-bullseye
 
 # set maintainer
-LABEL maintainer "miiro@getintodevops.com"
+LABEL maintainer="joeybader2003@outlook.com"
 
 # set a health check
 HEALTHCHECK --interval=5s \
