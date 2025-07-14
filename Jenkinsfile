@@ -11,7 +11,7 @@ node {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
 
-        app = docker.build("olaekiert/edureka-repo")
+        app = docker.build("olaa464/edureka-repo")
     }
 
     stage('Test image') {
@@ -30,7 +30,7 @@ node {
          * Pushing multiple tags is cheap, as all the layers are reused. */
         sh 'docker context use default'
         docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
-            sh "docker push olaekiert/edureka-repo"
+            sh "docker push olaa464/edureka-repo"
             app.push("${env.BUILD_NUMBER}")
             app.push("latest")
         }
