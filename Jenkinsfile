@@ -30,6 +30,7 @@ node {
          * Pushing multiple tags is cheap, as all the layers are reused. */
         sh 'docker context use default'
         docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+            sh "docker push edureka1/edureka"
             app.push("${env.BUILD_NUMBER}")
             app.push("latest")
         }
