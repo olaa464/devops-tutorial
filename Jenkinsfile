@@ -29,7 +29,7 @@ node {
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
         sh 'docker context use default'
-        withDockerRegistry([credentialsId: 'docker-hub-credentials', url: 'https://registry.hub.docker.com']) {
+        docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
             sh "docker push olaekiert/edureka-repo"
             app.push("${env.BUILD_NUMBER}")
             app.push("latest")
